@@ -105,7 +105,7 @@ for index, row in df.iterrows():
 
     # adding a subject, from address and to addess
     message = EmailMessage()
-    message['Subject'] = 'Test Email'
+    message['Subject'] = 'Python Training Certificate of Completion'
     message['From'] = sender_address
     message['To'] = receiver_address
 
