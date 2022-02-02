@@ -1,2 +1,6 @@
 .DS_Store
 **/*.csv
+**/*.png
+**/*.pdf
+responses/Quiz 1,2,3,4.xlsx
+trial.ipynb
