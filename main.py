@@ -9,6 +9,28 @@ from PIL import Image
 from PIL import ImageDraw
 from PIL import ImageFont
 
+# read assignments file
+assignments = pd.read_csv('responses/Assignments.csv')
+assignments.dropna(subset=['Grade'], inplace=True)
+assignments = assignments[assignments['Grade'] >= 60]
+assignments['Email Address'] = assignments['Email Address'].str.lower()
+
+# read quiz responses file
+quizzes = pd.read_csv('responses/Quizzes.csv')
+
+# merge both the DataFrames on common emails
+final = pd.merge(assignments, quizzes, on='Email Address', how='inner')
+
+# list of columns to keep
+cols = ['Email Address', 'Name', 'Quiz-1 Score', 'Quiz-2 Score', 'Quiz-3 Score', 'Quiz-4 Score', 'Grade']
+final = final[cols]
+final.rename({'Grade': 'Assignment'}, axis=1, inplace=True)
+
+# process assignment marks column 
+final['Assignment'] = final['Assignment'].apply(lambda x: str(int(x)) + ' / 100')
+
+# store in csv file
+final.to_csv('responses/final.csv')
 
 # credentials of sender and address of receiver
 sender_address = 'ccjntuhceh@gmail.com'
@@ -17,14 +39,12 @@ sender_password = getpass('Enter password: ')
 pwd = os.getcwd()
 
 # change coordinates to your liking (where the text should be placed) 
-# bottom_right_corner = (1250, 550)
-# top_left_corner = (200, 400)
-bottom_right_corner = (2400, 1300)
-top_left_corner = (800, 1000)
+bottom_right_corner = (2350, 1300)
+top_left_corner = (900, 1000)
 
 
 # open CSV file in read mode
-df = pd.read_csv("responses/Quiz 1,2,3,4.csv")
+df = pd.read_csv("responses/final.csv")
 
 for index, row in df.iterrows():
     name = row['Name']
@@ -33,7 +53,7 @@ for index, row in df.iterrows():
     name = name.strip().title()
 
     # Open the image 
-    img = Image.open('certs/cert.png')
+    img = Image.open('certs/PTCC Certificate.png')
     
     # Call draw Method to add 2D graphics in an image
     I1 = ImageDraw.Draw(img)
@@ -69,13 +89,14 @@ for index, row in df.iterrows():
     quiz_2 = row['Quiz-2 Score']
     quiz_3 = row['Quiz-3 Score']
     quiz_4 = row['Quiz-4 Score']
-    assignment = row['Final Assignment']
+    assignment = row['Assignment']
 
     receiver_address = email
 
     # adding a subject, from address and to addess
     message = EmailMessage()
     message['Subject'] = 'Python Training Certificate of Completion'
+    # message['Subject'] = 'Sample Email'
     message['From'] = sender_address
     message['To'] = receiver_address
 
@@ -92,6 +113,8 @@ Quiz - 4: {quiz_4}
 Final assignment: {assignment}
 
 As a reward of your efforts, here is your certificate!
+
+We wish you all the best!!!
 
 Thank you {name}
 - Coding Club JNTUHCEH
