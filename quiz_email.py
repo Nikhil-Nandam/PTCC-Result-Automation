@@ -53,9 +53,10 @@ emails_names.rename(columns={'Name (Actual name that you want on the certificate
 
 cols = ['Email Address', 'Name', 'Quiz-1 Score', 'Quiz-2 Score', 'Quiz-3 Score', 'Quiz-4 Score']
 emails_names = emails_names[cols]
+emails_names['Email Address'] = emails_names['Email Address'].str.lower()
 
-emails_names.to_excel('responses/Quiz 1,2,3,4.xlsx')
-emails_names.to_csv('responses/Quiz 1,2,3,4.csv')
+emails_names.to_excel('responses/Quizzes.xlsx')
+emails_names.to_csv('responses/Quizzes.csv')
 
 # credentials of sender and address of receiver
 sender_address = 'ccjntuhceh@gmail.com'
